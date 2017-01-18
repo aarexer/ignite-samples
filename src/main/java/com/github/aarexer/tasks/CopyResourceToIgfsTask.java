@@ -1,4 +1,4 @@
-package ru.at_consulting.dmp.km;
+package com.github.aarexer.tasks;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
