@@ -11,32 +11,33 @@ import java.util.Collections;
 
 public class HelloIgnite {
     public static void main(String[] args) {
-        System.out.println("Hello Ignite");
-        // create a new instance of TCP Discovery SPI
-        TcpDiscoverySpi spi = new TcpDiscoverySpi();
-        // create a new instance of tcp discovery multicast ip finder
-        TcpDiscoveryMulticastIpFinder tcMp = new TcpDiscoveryMulticastIpFinder();
-        tcMp.setAddresses(Collections.singletonList("localhost")); // change your IP address here
-        // set the multi cast ip finder for spi
-        spi.setIpFinder(tcMp);
-        // create new ignite configuration
-        IgniteConfiguration cfg = new IgniteConfiguration();
-        cfg.setClientMode(false);
-        // set the discovery spi to ignite configuration
-        cfg.setDiscoverySpi(spi);
-        // Start ignite
-        Ignite ignite = Ignition.start(cfg);
-        // get or create cache
-        IgniteCache<Integer, String> cache = ignite.getOrCreateCache("myCacheName");
-        // put some cache elements
+        Ignite ignite = Ignition.start(getDefaultConfig());
+        IgniteCache<Integer, String> cache = ignite.getOrCreateCache("example");
+
         for (int i = 1; i <= 100; i++) {
             cache.put(i, Integer.toString(i));
         }
-        // get them from the cache and write to the console
         for (int i = 1; i <= 100; i++) {
             System.out.println("Cache get:" + cache.get(i));
         }
-        // close ignite instance
         ignite.close();
     }
+
+    private static TcpDiscoverySpi createDefaultTcpDiscoverySpi() {
+        TcpDiscoverySpi spi = new TcpDiscoverySpi();
+        TcpDiscoveryMulticastIpFinder tcMp = new TcpDiscoveryMulticastIpFinder();
+        tcMp.setAddresses(Collections.singletonList("localhost"));
+        spi.setIpFinder(tcMp);
+
+        return spi;
+    }
+
+    private static IgniteConfiguration getDefaultConfig() {
+        IgniteConfiguration cfg = new IgniteConfiguration();
+        cfg.setClientMode(false);
+        cfg.setDiscoverySpi(createDefaultTcpDiscoverySpi());
+
+        return cfg;
+    }
+
 }
