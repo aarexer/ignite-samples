@@ -3,11 +3,8 @@ package com.github.aarexer.examples;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
-import org.apache.ignite.configuration.IgniteConfiguration;
-import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
-import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
 
-import java.util.Collections;
+import static com.github.aarexer.examples.IgniteConfigsFabric.getDefaultConfig;
 
 public class HelloIgnite {
     public static void main(String[] args) {
@@ -23,21 +20,5 @@ public class HelloIgnite {
         ignite.close();
     }
 
-    private static TcpDiscoverySpi createDefaultTcpDiscoverySpi() {
-        TcpDiscoverySpi spi = new TcpDiscoverySpi();
-        TcpDiscoveryMulticastIpFinder tcMp = new TcpDiscoveryMulticastIpFinder();
-        tcMp.setAddresses(Collections.singletonList("localhost"));
-        spi.setIpFinder(tcMp);
-
-        return spi;
-    }
-
-    private static IgniteConfiguration getDefaultConfig() {
-        IgniteConfiguration cfg = new IgniteConfiguration();
-        cfg.setClientMode(false);
-        cfg.setDiscoverySpi(createDefaultTcpDiscoverySpi());
-
-        return cfg;
-    }
 
 }
